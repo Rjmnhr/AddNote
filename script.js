@@ -6,7 +6,7 @@ const listNotes = document.getElementById("notes");
 const button = document.getElementById("buttons");
 const AddBtn = document.getElementById("add-note-button");
 const searchInput = document.getElementById("search");
-const searchBtn = document.getElementById("searchButton");
+
 const deleteSelected = document.getElementById("deleteSelected");
 const form = document.querySelector(".form");
 
@@ -85,13 +85,29 @@ function showNotes() {
     deleting();
     //Delete function for deleting a particular note
     function deleting() {
-      deleteButton.addEventListener("click", function () {
-        checkbox.style.display = "none";
-        let confirmDelete = confirm(
-          `Make sure you want to delete note '${notesArray[i].title}'`
-        );
+      function showAlert() {
+        const alertBox = document.createElement("div");
 
-        if (confirmDelete === true) {
+        alertBox.classList.add("alert");
+        alertBox.innerHTML = `<div class="alert-message">
+        <h3>Do you want to delete ${notesArray[i].title}</h3> 
+        <div class="options"><button id="okBtn">confirm</button> 
+        <button id="cancel">cancel</button>
+        </div>
+        </div>`;
+
+        listNotes.appendChild(alertBox);
+
+        const okBtn = document.getElementById("okBtn");
+        const cancelBtn = document.getElementById("cancel");
+
+        cancelBtn.addEventListener("click", function () {
+          showNotes();
+          return;
+        });
+
+        okBtn.addEventListener("click", () => {
+          listNotes.removeChild(alertBox);
           buttonsBlock.removeChild(deleteButton);
           buttonsBlock.removeChild(editButton);
           buttonsBlock.removeChild(arch);
@@ -106,7 +122,7 @@ function showNotes() {
 
           //move to backup function for deleting a particular note
           moveToRecycleBin.addEventListener("click", function () {
-            listNotes.removeChild(listItem);
+            // listNotes.removeChild(listItem);
             let backUpStore = notesArray.filter(
               (note) => note.id === notesArray[i].id
             );
@@ -117,7 +133,7 @@ function showNotes() {
             notesArray = notesArray.filter(
               (note) => note.id !== notesArray[i].id
             );
-            alert(`Note ${notesArray[i].title} is moved successfully`);
+
             localStorage.setItem("note", JSON.stringify(notesArray));
             localStorage.setItem("backup", JSON.stringify(backUpArray));
 
@@ -142,7 +158,12 @@ function showNotes() {
               showNotes();
             }
           });
-        }
+        });
+      }
+
+      deleteButton.addEventListener("click", function () {
+        checkbox.style.display = "none";
+        showAlert();
       });
     }
 
@@ -150,11 +171,9 @@ function showNotes() {
     const checkbox = document.getElementById(`${notesArray[i].id}`);
 
     checkbox.addEventListener("change", function () {
-      deleteSelected.style.display = "block";
-      archiveBtn.style.display = "block";
-      moveSelected.style.display = "block";
       if (checkbox.checked) {
         // Disable the delete button
+        extraBtns.style.display = "flex";
         buttonsBlock.removeChild(deleteButton);
         buttonsBlock.removeChild(editButton);
         buttonsBlock.removeChild(arch);
@@ -332,7 +351,7 @@ archiveBtn.addEventListener("click", function () {
     if (checkbox.checked) {
       // Get the ID of the note to delete
       const noteId = checkbox.id;
-      alert(notesArray);
+
       // Remove the note from the notesArray
       let archive = notesArray.filter((note) => note.id === Number(noteId));
 
@@ -350,32 +369,46 @@ archiveBtn.addEventListener("click", function () {
 });
 
 //function to search a notes according to the title value
-searchBtn.addEventListener("click", function () {
+
+searchInput.addEventListener("input", function () {
   const searchValue = searchInput.value.toUpperCase().trim();
+
   if (searchValue === "") {
+    // If the search input is empty, clear the notes list
+    showNotes();
     return;
   }
 
   let searchArray = JSON.parse(localStorage.getItem("note"));
 
-  notesArray = searchArray.filter((item) => item.title === searchValue);
-  if (notesArray.length > 0) {
+  searchArray = searchArray.filter((item) => item.title.includes(searchValue));
+
+  if (searchArray.length > 0) {
+    let html = ``;
     listNotes.innerHTML = "";
-    for (let i = 0; i < notesArray.length; i++) {
+    for (let i = 0; i < searchArray.length; i++) {
       let listItem = document.createElement("div");
       listItem.setAttribute("id", "noteDiv");
-      listItem.innerHTML = `<b> <span style="color:aqua;">${notesArray[i].title}</b></span><br>${notesArray[i].desc}<h4 id="date">${notesArray[i].time}</h4>`;
+      html = `<b> <span style="color:aqua;">${searchArray[i].title}</b></span><br>${searchArray[i].desc}<h4 id="date">${searchArray[i].time}</h4>
+      <div class="btnBlock" id="btnBlock">
+      <img id="delete" src="./bin.png" height='20px' width='20px'>
+      <img src="./pencil.png" height='20px' width='20px'>
+      <img src="./folders.png" height='20px' width='20px'>
+      </div>`;
+      listItem.innerHTML = html;
+
       listNotes.appendChild(listItem);
     }
   } else {
-    alert("No such note found");
+    listNotes.innerHTML = `<h2>Not found anything</h2>`;
   }
 });
 
-const showArchive = document.getElementById("showArchive");
+const showArchived = document.getElementById("showArchive");
 
 //function to show the notes moved to archive
-showArchive.addEventListener("click", function () {
+
+function showArchive() {
   deleteSelected.style.display = "none";
   archiveBtn.style.display = "none";
   listNotes.innerHTML = " ";
@@ -436,8 +469,12 @@ showArchive.addEventListener("click", function () {
 
       localStorage.setItem("archive", JSON.stringify(archiveArray));
       localStorage.setItem("note", JSON.stringify(notesArray));
+      showArchive();
     });
   }
+}
+showArchived.addEventListener("click", () => {
+  showArchive();
 });
 
 //side toggle  button reference and function
@@ -453,6 +490,12 @@ noteShow.addEventListener("click", function () {
   noteShow.classList.toggle("clicked");
   form.style.display = "flex";
   showNotes();
+});
+
+const close = document.getElementById("close");
+const extraBtns = document.getElementById("Extrabuttons");
+close.addEventListener("click", () => {
+  extraBtns.style.display = "none";
 });
 
 showNotes();
