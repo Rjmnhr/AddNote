@@ -401,7 +401,12 @@ searchInput.addEventListener("input", function () {
       listNotes.appendChild(listItem);
     }
   } else {
-    listNotes.innerHTML = `<h2>Not found anything</h2>`;
+    listNotes.innerHTML = "";
+    const empty = document.createElement("div");
+    empty.setAttribute("class", "nthg");
+    empty.innerHTML = `<p>Found Nothing!</p>`;
+
+    listNotes.appendChild(empty);
   }
 });
 
@@ -413,7 +418,7 @@ function showArchive() {
   deleteSelected.style.display = "none";
   archiveBtn.style.display = "none";
   listNotes.innerHTML = " ";
-  if (notesArray.length === 0) {
+  if (archiveArray.length === 0) {
     const empty = document.createElement("div");
     empty.setAttribute("class", "nthg");
     empty.innerHTML = `<p>Nothing to show!</p>`;
