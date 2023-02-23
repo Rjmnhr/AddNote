@@ -47,8 +47,9 @@ AddBtn.addEventListener("click", function () {
 function showNotes() {
   listNotes.innerHTML = " ";
   if (notesArray.length === 0) {
-    const empty = document.createElement("pre");
-    empty.innerHTML = "Nothing to show! Add some notes";
+    const empty = document.createElement("div");
+    empty.setAttribute("class", "nthg");
+    empty.innerHTML = `<p>Nothing to show! Add some notes</p>`;
 
     listNotes.appendChild(empty);
   }
@@ -412,9 +413,10 @@ function showArchive() {
   deleteSelected.style.display = "none";
   archiveBtn.style.display = "none";
   listNotes.innerHTML = " ";
-  if (archiveArray.length === 0) {
-    const empty = document.createElement("pre");
-    empty.innerHTML = "Nothing to show!";
+  if (notesArray.length === 0) {
+    const empty = document.createElement("div");
+    empty.setAttribute("class", "nthg");
+    empty.innerHTML = `<p>Nothing to show!</p>`;
 
     listNotes.appendChild(empty);
   }

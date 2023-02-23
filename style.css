@@ -134,9 +134,13 @@ body {
     margin-left: 0;
     margin: 3px;
   }
-  pre{
+
+  .nthg{
     position: absolute;
-     bottom: 50%;
+    bottom: 50%;
+  }
+  p{
+    
      font-weight: bold;
      font-size: large;
      color: gray;
@@ -314,12 +318,10 @@ background-color: white;
     h1{
       font-size:x-large;
     }
-    pre{
-      position: absolute;
-       bottom: 20%;
-    }
+
     .nav-bar{
       width: 100%;
+       gap: 20px;
     }
     .left-container{
       width: 100%;
@@ -340,15 +342,18 @@ background-color: white;
     padding: 0;
   }
 
-  .nav-bar{
-    gap: 10px;
-    
-  }
-
   .btnBlock{
     gap: 0;
     
     
+  }
+  #noteDiv{
+    margin-top: 50px;
+  }
+
+  .nthg{
+position:static;
+
   }
   
 
